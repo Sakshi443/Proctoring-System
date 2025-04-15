@@ -4,7 +4,7 @@
   "description": "A simple login system using Express and Firebase Admin SDK",
   "main": "app.js",
   "scripts": {
-    "start": "node api/app.js",
+    "start": "node login/api/app.js",
     "login": "node login.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon app.js"

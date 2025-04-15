@@ -351,7 +351,7 @@
                     var user = result.user;
                     return user.getIdToken().then((idToken) => {
                         sendTokenToServer(idToken); // Send ID token to server for verification
-                        window.location.href = 'public/gym/dashboard.html'; // Redirect to gym.html
+                        window.location.href = 'public/dashboard/dashboard.html'; // Redirect to dashboard.html
                     });
                 })
                 .catch((error) => {
@@ -395,7 +395,7 @@
                     // Proceed with your application logic
                     user.getIdToken().then((idToken) => {
                         sendTokenToServer(idToken);
-                        window.location.href = '/gym/dashboard.html'; // Redirect to gym.html
+                        window.location.href = '/dashboard/dashboard.html'; // Redirect to dashboard.html
                     });
                 })
                 .catch((error) => {

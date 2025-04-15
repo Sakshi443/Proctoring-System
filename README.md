@@ -1,4 +1,4 @@
-# MyProctor.ai-AI-BASED-SMART-ONLINE-EXAMINATION-PROCTORING-SYSYTEM
+# Proctor-AI-BASED-SMART-ONLINE-EXAMINATION-PROCTORING-SYSYTEM
 
 # IF YOU ARE LOOKING ONLY FOR PROCTORING REFER THIS LIBRARY:
 ## Github Link: [https://github.com/Sakshi443/Proctoring-System](https://github.com/Sakshi443/Proctoring-System.git)

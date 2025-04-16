@@ -351,7 +351,7 @@
                     var user = result.user;
                     return user.getIdToken().then((idToken) => {
                         sendTokenToServer(idToken); // Send ID token to server for verification
-                        window.location.href = 'public/dashboard/stidentDashboard.html'; // Redirect to dashboard.html
+                        window.location.href = '/dashboard/stidentDashboard.html'; // Redirect to dashboard.html
                     });
                 })
                 .catch((error) => {

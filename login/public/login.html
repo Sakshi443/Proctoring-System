@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <title>My Website</title>
+    <title>Proctor</title>
 
     <!-- Add Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-app.js"></script>
@@ -351,7 +351,7 @@
                     var user = result.user;
                     return user.getIdToken().then((idToken) => {
                         sendTokenToServer(idToken); // Send ID token to server for verification
-                        window.location.href = 'public/dashboard/dashboard.html'; // Redirect to dashboard.html
+                        window.location.href = 'public/dashboard/stidentDashboard.html'; // Redirect to dashboard.html
                     });
                 })
                 .catch((error) => {
@@ -395,7 +395,7 @@
                     // Proceed with your application logic
                     user.getIdToken().then((idToken) => {
                         sendTokenToServer(idToken);
-                        window.location.href = '/dashboard/dashboard.html'; // Redirect to dashboard.html
+                        window.location.href = '/dashboard/StudentDashboard.html'; // Redirect to dashboard.html
                     });
                 })
                 .catch((error) => {

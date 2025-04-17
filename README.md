@@ -3,7 +3,6 @@
 # IF YOU ARE LOOKING ONLY FOR PROCTORING REFER THIS LIBRARY:
 ## Github Link: [https://github.com/Sakshi443/Proctoring-System](https://github.com/Sakshi443/Proctoring-System.git)
 
-## PROPOSED SYSTEM
 # A) Authentication with Image Verification
 1) Basic Login, Register, Forgot Password, Change Password, etc
 2) System allows only one login per user, so that user can’t do any unfair means.

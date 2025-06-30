@@ -1,0 +1,21 @@
+{
+  "name": "proctoring-system",
+  "version": "1.0.0",
+  "description": "1) Basic Login, Register, Forgot Password, Change Password, etc\r 2) System allows only one login per user, so that user can’t do any unfair means.\r 3) System will verify image of user at every time of login and also in exam using face recognition technology.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  },
+  "dependencies": {
+    "dotenv": "^17.0.0",
+    "express": "^5.1.0",
+    "firebase-admin": "^13.4.0"
+  }
+}

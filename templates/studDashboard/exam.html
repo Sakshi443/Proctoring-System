@@ -244,6 +244,33 @@
       }, 1000);
     }
 
+    // async function analyzeFrame() {
+    //   const video = document.getElementById('webcam');
+    //   if (video.readyState !== 4) return setTimeout(analyzeFrame, 2000);
+
+    //   const det = await faceapi
+    //     .detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
+    //     .withFaceLandmarks(true);
+
+    //   if (det.length === 0) {
+    //     await showViolation('NO_FACE');
+    //   } else if (det.length > 1) {
+    //     await showViolation('MULTIPLE_FACES');
+    //   } else {
+    //     // exactly one face, check looking away
+    //     const lm = det[0].landmarks;
+    //     const nose = lm.getNose()[0];
+    //     const l = lm.getLeftEye()[0];
+    //     const r = lm.getRightEye()[3];
+    //     const away = Math.abs((nose.x - (l.x + r.x) / 2) / video.videoWidth) > 0.1;
+    //     if (away) await showViolation('LOOKING_AWAY');
+    //   }
+
+    //   setTimeout(analyzeFrame, 2000);
+    // }
+
+    let awayCounter = 0; // Global counter to track consecutive looking away
+
     async function analyzeFrame() {
       const video = document.getElementById('webcam');
       if (video.readyState !== 4) return setTimeout(analyzeFrame, 2000);
@@ -253,8 +280,10 @@
         .withFaceLandmarks(true);
 
       if (det.length === 0) {
+        awayCounter = 0;
         await showViolation('NO_FACE');
       } else if (det.length > 1) {
+        awayCounter = 0;
         await showViolation('MULTIPLE_FACES');
       } else {
         // exactly one face, check looking away
@@ -262,12 +291,24 @@
         const nose = lm.getNose()[0];
         const l = lm.getLeftEye()[0];
         const r = lm.getRightEye()[3];
-        const away = Math.abs((nose.x - (l.x + r.x) / 2) / video.videoWidth) > 0.1;
-        if (away) await showViolation('LOOKING_AWAY');
+
+        const faceCenterX = (l.x + r.x) / 2;
+        const deviation = Math.abs((nose.x - faceCenterX) / video.videoWidth);
+
+        if (deviation > 0.1) {
+          awayCounter++;
+          if (awayCounter >= 2) {
+            await showViolation('LOOKING_AWAY');
+            awayCounter = 0; // Reset after logging
+          }
+        } else {
+          awayCounter = 0; // Reset if looking normally
+        }
       }
 
       setTimeout(analyzeFrame, 2000);
     }
+
 
     // 🎤 Silero-based Voice Activity Detection
     async function initMicDetection() {
@@ -340,90 +381,90 @@
       location.href = 'studentDashboard.html';
     }
 
-  // ... Your Firebase, face detection, and exam logic stays unchanged above ...
+    // ... Your Firebase, face detection, and exam logic stays unchanged above ...
 
-      // ─── Additional Violation Tracking ───────────────────────────────────────────
+    // ─── Additional Violation Tracking ───────────────────────────────────────────
 
-      // Handle Fullscreen Request
-      function requestFullscreen() {
-    const el = document.documentElement;
+    // Handle Fullscreen Request
+    function requestFullscreen() {
+      const el = document.documentElement;
       if (el.requestFullscreen) el.requestFullscreen();
       else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
       else if (el.msRequestFullscreen) el.msRequestFullscreen();
-  }
+    }
 
-  // Request fullscreen when exam starts
-  document.getElementById('startBtn').addEventListener('click', () => {
-        localStorage.setItem("startExam", "true");
+    // Request fullscreen when exam starts
+    document.getElementById('startBtn').addEventListener('click', () => {
+      localStorage.setItem("startExam", "true");
       requestFullscreen(); // Ensure fullscreen
-  });
+    });
 
-  // Auto re-request fullscreen if exited
-  document.addEventListener("fullscreenchange", () => {
-    if (!document.fullscreenElement) {
+    // Auto re-request fullscreen if exited
+    document.addEventListener("fullscreenchange", () => {
+      if (!document.fullscreenElement) {
         logViolation("EXIT_FULLSCREEN");
-      showViolationAlert("Exited fullscreen!");
+        showViolationAlert("Exited fullscreen!");
 
-      setTimeout(() => {
-        const retry = confirm("You exited fullscreen. Click OK to re-enter.");
-      if (retry) requestFullscreen();
-      }, 300);
-    }
-  });
+        setTimeout(() => {
+          const retry = confirm("You exited fullscreen. Click OK to re-enter.");
+          if (retry) requestFullscreen();
+        }, 300);
+      }
+    });
 
-  // Detect tab switching
-  document.addEventListener("visibilitychange", async () => {
-    if (document.hidden) {
+    // Detect tab switching
+    document.addEventListener("visibilitychange", async () => {
+      if (document.hidden) {
         await logViolation("TAB_SWITCH");
-      showViolationAlert("Tab switch detected!");
-    }
-  });
+        showViolationAlert("Tab switch detected!");
+      }
+    });
 
-  // Detect window blur (e.g., switching to another app)
-  window.addEventListener("blur", async () => {
-        await logViolation("WINDOW_BLUR");
+    // Detect window blur (e.g., switching to another app)
+    window.addEventListener("blur", async () => {
+      await logViolation("WINDOW_BLUR");
       showViolationAlert("Window lost focus!");
-  });
+    });
 
-  // Block right-click and clipboard actions
-  ["copy", "paste", "cut", "contextmenu"].forEach(evt => {
-        document.addEventListener(evt, e => {
-          e.preventDefault();
-          logViolation(evt.toUpperCase());
-          showViolationAlert(`Blocked action: ${evt}`);
-        });
-  });
-
-  // Block specific key shortcuts (Ctrl+C, Ctrl+V, Ctrl+U)
-  document.addEventListener("keydown", e => {
-    if (e.ctrlKey && ["c", "v", "x", "u"].includes(e.key.toLowerCase())) {
+    // Block right-click and clipboard actions
+    ["copy", "paste", "cut", "contextmenu"].forEach(evt => {
+      document.addEventListener(evt, e => {
         e.preventDefault();
-      const map = {c: "COPY", v: "PASTE", x: "CUT", u: "VIEW_SOURCE" };
-      logViolation(map[e.key.toLowerCase()]);
-      showViolationAlert(`Blocked key: Ctrl+${e.key.toUpperCase()}`);
-    }
-  });
+        logViolation(evt.toUpperCase());
+        showViolationAlert(`Blocked action: ${evt}`);
+      });
+    });
 
-      // ─── Violation Logging Helper ───────────────────────────────────────────────
-      async function logViolation(type) {
-    try {
+    // Block specific key shortcuts (Ctrl+C, Ctrl+V, Ctrl+U)
+    document.addEventListener("keydown", e => {
+      if (e.ctrlKey && ["c", "v", "x", "u"].includes(e.key.toLowerCase())) {
+        e.preventDefault();
+        const map = { c: "COPY", v: "PASTE", x: "CUT", u: "VIEW_SOURCE" };
+        logViolation(map[e.key.toLowerCase()]);
+        showViolationAlert(`Blocked key: Ctrl+${e.key.toUpperCase()}`);
+      }
+    });
+
+    // ─── Violation Logging Helper ───────────────────────────────────────────────
+    async function logViolation(type) {
+      try {
         await addDoc(collection(db, `exams/${examId}/violations`), {
           studentName,
           studentEmail,
           type,
           timestamp: new Date().toISOString()
         });
-    } catch (err) {
+      } catch (err) {
         console.warn("Violation logging failed:", err);
+      }
     }
-  }
 
-      function showViolationAlert(reason) {
-    const box = document.getElementById("violationAlert");
+    function showViolationAlert(reason) {
+      const box = document.getElementById("violationAlert");
       box.innerText = `⚠ Violation: ${reason}`;
-    box.classList.remove("hidden");
-    setTimeout(() => box.classList.add("hidden"), 4000);
-  }
+      box.classList.remove("hidden");
+      setTimeout(() => box.classList.add("hidden"), 4000);
+    }
   </script>
 
 

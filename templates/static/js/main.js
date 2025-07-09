@@ -5,6 +5,7 @@ import {
   onAuthStateChanged,
   createUserWithEmailAndPassword,
   sendEmailVerification,
+//} from "https://www.gstatic.com/firebasejs/10.7.2/firebase-auth.js";
 } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
 
 import {
@@ -13,40 +14,6 @@ import {
   getDoc,
   updateDoc,
 } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
-// Import Firebase core and required services
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-analytics.js";
-import {
-  getAuth,
-  signOut,
-} from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
-import {
-  getFirestore,
-  collection,
-  getDocs,
-  doc,
-  updateDoc,
-  deleteDoc,
-  query,
-  where,
-} from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
-
-// Firebase config
-const firebaseConfig = {
-  apiKey: "AIzaSyBPc_rkY_RKIoEk91mHD2ulkCQpqLv3m2U",
-  authDomain: "proctor-92afc.firebaseapp.com",
-  projectId: "proctor-92afc",
-  storageBucket: "proctor-92afc.firebasestorage.app",
-  messagingSenderId: "241015750718",
-  appId: "1:241015750718:web:473382a019e349cad9516f",
-  measurementId: "G-SCZ7G5701B",
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-const auth = getAuth(app);
-const db = getFirestore(app);
 
 // import { auth } from "./firebase.js";
 // import { auth, db } from "../firebaseConfig.js"; // 🔗 Firebase config
@@ -195,11 +162,9 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
         // Auto-redirect to dashboard based on role
         if (window.location.pathname === "/index.html") {
           if (role === "teacher") {
-            window.location.href =
-              "/templates/profDashboard/professorDashboard.html";
+            window.location.href = "/templates/profDashboard/professorDashboard.html";
           } else if (role === "student") {
-            window.location.href =
-              "/templates/studDashboard/studentDashboard.html";
+            window.location.href = "/templates/studDashboard/studentDashboard.html";
           } else {
             alert("Unknown role.");
           }
@@ -214,12 +179,12 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
 });
 
 // Add in js/main.js or after firebase-config.js
-firebase
-  .auth()
-  .signInWithEmailAndPassword(email, password)
-  .then((userCredential) => {
+firebase.auth().signInWithEmailAndPassword(email, password)
+  .then(userCredential => {
     console.log("Logged in!", userCredential.user);
   })
-  .catch((error) => {
+  .catch(error => {
     console.error("Error logging in", error);
   });
+
+
